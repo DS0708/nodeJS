@@ -1,3 +1,6 @@
+const path = require('path');
+const dotenv = require('dotenv');
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 const morgan = require('morgan');
 const axios = require('axios');
 const express = require('express');
@@ -13,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 /* 라우팅 설정 */
 app.get('/airkorea/detail', async (req, res) => {
-    const serviceKey = "Aqujd4FK4LwLmpLxu7TiyLpB86MY8K7Gaz2WjN0BYPVKzFAb9CREpu6xJz%2F8vq9LNS4JCkK48P1lFWWWWA9C7Q%3D%3D";
+    const serviceKey = process.env.airServiceKey;
     const airUrl = "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?";
 
     let parmas = encodeURI('serviceKey') + '=' + serviceKey;
