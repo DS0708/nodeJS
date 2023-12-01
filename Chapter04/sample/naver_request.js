@@ -16,8 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 
 /* 라우팅 설정 */
 app.get('/naver/news', (req, res) => {
-    const client_id = naverClientKey;
-    const client_secret = naverSecret;
+    const client_id = process.env.naverClientKey;
+    const client_secret = process.env.naverSecret;
     const api_url = 'https://openapi.naver.com/v1/search/news.json?query=' + encodeURI('코스피'); //encodeURI(req.query.query);
     const option = {
     };
