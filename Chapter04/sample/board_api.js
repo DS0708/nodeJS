@@ -1,3 +1,7 @@
+/* uuid-apikey 추가하기 */
+const url = require('url');
+const uuidAPIkey = require('uuid-apikey');
+
 const morgan = require('morgan');
 
 /* express app generate */
@@ -11,6 +15,12 @@ app.set('port', process.env.PORT || 8080);
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+/* 테스트를 위한 API키 */
+const key = {
+    apiKey: 'CF2EZFP-4Z44C63-G9M6AGJ-KP8AXCZ',
+    uuid: '63c4efbe-27c8-4618-8268-65429d90aeb3'
+};
 
 /* 테스트를 위한 게시글 데이터 */
 let boardList = [];
@@ -69,6 +79,34 @@ app.delete('/board/:id', (req, res) => {
     boardList.splice(idx, 1);
 
     res.redirect('/board');
+});
+
+/* 게시글 검색 API using uuid-key */
+app.get('/board/:apikey/:type', (req, res) => {
+    let { type, apikey } = req.params;
+    const queryData = url.parse(req.url, true).query;
+
+    if (uuidAPIkey.isAPIKey(apikey) && uuidAPIkey.check(apikey, key.uuid)) {
+        if (type === 'search') { // 키워드로 게시글 검색  
+            const keyword = queryData.keyword;
+            const result = boardList.filter((e) => {
+                return e.title.includes(keyword)
+            })
+            res.send(result);
+        }
+        else if (type === 'user') { // 닉네임으로 게시글 검색  
+            const user_id = queryData.user_id;
+            const result = boardList.filter((e) => {
+                return e.user_id === user_id;
+            });
+            res.send(result);
+        }
+        else {
+            res.send('Wrong URL')
+        }
+    } else {
+        res.send('Wrong API Key');
+    }
 });
 
 /* 서버와 포트 연결.. */
