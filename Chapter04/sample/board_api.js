@@ -1,3 +1,5 @@
+const cors = require('cors'); //cors 임포트 
+
 /* uuid-apikey 추가하기 */
 const url = require('url');
 const uuidAPIkey = require('uuid-apikey');
@@ -15,6 +17,7 @@ app.set('port', process.env.PORT || 8080);
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 /* 테스트를 위한 API키 */
 const key = {
